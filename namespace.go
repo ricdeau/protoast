@@ -1,7 +1,7 @@
 package protoast
 
 import (
-	"github.com/sirkon/protoast/ast"
+	"github.com/ricdeau/protoast/ast"
 )
 
 type Namespace interface {

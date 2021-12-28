@@ -10,10 +10,10 @@ import (
 	"text/scanner"
 
 	"github.com/emicklei/proto"
-	"github.com/sirkon/protoast/internal/errors"
-	"github.com/sirkon/protoast/internal/namespace"
+	"github.com/ricdeau/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/namespace"
 
-	"github.com/sirkon/protoast/ast"
+	"github.com/ricdeau/protoast/ast"
 )
 
 // NewBuilder конструктор построителя AST-представления

@@ -3,8 +3,8 @@ package ast
 import (
 	"io"
 
-	"github.com/sirkon/protoast/ast/internal/liner"
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/ast/internal/liner"
+	"github.com/ricdeau/protoast/internal/errors"
 )
 
 var _ Node = &File{}

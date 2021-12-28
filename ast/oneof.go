@@ -1,6 +1,7 @@
 package ast
 
 var _ Type = &OneOf{}
+var _ Compaund = &OneOf{}
 
 // OneOf представление для oneof поля message-а
 type OneOf struct {
@@ -12,11 +13,20 @@ type OneOf struct {
 	Branches []*OneOfBranch
 }
 
+func (o *OneOf) GetName() string {
+	return o.Name
+}
+
+func (o *OneOf) GetParentMsg() *Message {
+	return o.ParentMsg
+}
+
 func (*OneOf) genericType() {}
 func (*OneOf) node()        {}
 
 var _ Unique = &OneOfBranch{}
 var _ Field = &OneOfBranch{}
+var _ Named = &OneOfBranch{}
 
 // OneOfBranch представление для ветви
 type OneOfBranch struct {
@@ -27,6 +37,10 @@ type OneOfBranch struct {
 	ParentOO *OneOf
 	Sequence int
 	Options  []*Option
+}
+
+func (o *OneOfBranch) GetName() string {
+	return o.Name
 }
 
 func (o *OneOfBranch) isField() (string, Type, []*Option, int) {

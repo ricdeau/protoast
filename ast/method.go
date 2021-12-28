@@ -1,6 +1,7 @@
 package ast
 
 var _ Node = &Method{}
+var _ Named = &Method{}
 
 // Method представление для метода
 type Method struct {
@@ -14,6 +15,10 @@ type Method struct {
 	Output Type
 
 	Options []*Option
+}
+
+func (m *Method) GetName() string {
+	return m.Name
 }
 
 func (m *Method) node() {}

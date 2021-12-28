@@ -7,10 +7,10 @@ import (
 	"text/scanner"
 
 	"github.com/emicklei/proto"
-	"github.com/sirkon/protoast/internal/errors"
-	"github.com/sirkon/protoast/internal/namespace"
+	"github.com/ricdeau/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/namespace"
 
-	"github.com/sirkon/protoast/ast"
+	"github.com/ricdeau/protoast/ast"
 )
 
 var _ proto.Visitor = &typesVisitor{}
@@ -359,8 +359,8 @@ func (tv *typesVisitor) literalToOptionValueWithMsg(name string, l *proto.Litera
 					continue outerLoop
 				}
 			}
-			// res.Value[item.Name] = tv.literalToOptionValueWithMsg(item.Name, item.Literal, ext)
-			tv.errors(errPosf(l.Position, "invalid option %s", name))
+			res.Value[item.Name] = tv.literalToOptionValueWithMsg(item.Name, item.Literal, msg)
+			// tv.errors(errPosf(l.Position, "invalid option %s", name))
 		}
 		return res
 	case l.Source != "":
@@ -425,7 +425,14 @@ func (tv *typesVisitor) literalToOptionValueWithOneof(name string, l *proto.Lite
 			shortName := shortName(name)
 			for _, b := range oo.Branches {
 				if b.Name == shortName {
-					res.Value[item.Name] = tv.fromType(b.Type, shortName, l)
+					fromType := tv.fromType(b.Type, shortName, l)
+					if opt, ok := fromType.(*ast.MapOption); ok {
+						for k, v := range opt.Value {
+							res.Value[k] = v
+						}
+					} else {
+						res.Value[item.Name] = fromType
+					}
 					continue outerLoop
 				}
 			}
@@ -484,6 +491,9 @@ func (tv *typesVisitor) fromType(fieldType ast.Type, name string, l *proto.Liter
 		return tv.fromType(v.Type, name, l)
 	case *ast.Repeated:
 		return tv.fromType(v.Type, name, l)
+	case *ast.Message:
+		msg := tv.literalToOptionValueWithMsg(name, l, v)
+		return msg
 	default:
 		tv.errors(errPosf(l.Position, "type %T is not supported for option values", fieldType))
 	}

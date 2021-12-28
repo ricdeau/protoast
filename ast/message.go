@@ -3,6 +3,7 @@ package ast
 import "strings"
 
 var _ Type = &Message{}
+var _ Compaund = &Message{}
 
 // Message представление message
 type Message struct {
@@ -15,6 +16,14 @@ type Message struct {
 	Fields  []*MessageField
 	Types   []Type
 	Options []*Option
+}
+
+func (m *Message) GetName() string {
+	return m.Name
+}
+
+func (m *Message) GetParentMsg() *Message {
+	return m.ParentMsg
 }
 
 func (*Message) genericType() {}
