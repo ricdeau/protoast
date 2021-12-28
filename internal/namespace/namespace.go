@@ -3,7 +3,7 @@ package namespace
 import (
 	"text/scanner"
 
-	"github.com/sirkon/protoast/ast"
+	"github.com/ricdeau/protoast/ast"
 )
 
 type Namespace interface {

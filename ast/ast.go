@@ -24,3 +24,13 @@ type Hashable interface {
 	ScalarNode
 	hashable()
 }
+
+// Named типы имеющие имя
+type Named interface {
+	GetName() string
+}
+
+type Compaund interface {
+	Named
+	GetParentMsg() *Message
+}

@@ -1,4 +1,4 @@
-module github.com/sirkon/protoast
+module github.com/ricdeau/protoast
 
 go 1.12
 

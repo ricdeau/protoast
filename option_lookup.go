@@ -5,9 +5,9 @@ import (
 	"strings"
 	"text/scanner"
 
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/errors"
 
-	"github.com/sirkon/protoast/ast"
+	"github.com/ricdeau/protoast/ast"
 )
 
 type optionType string

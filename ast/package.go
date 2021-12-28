@@ -4,7 +4,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/errors"
 )
 
 // NewPackage конструктор пакета прото-файлов. Если список files пуст возвращается ошибка

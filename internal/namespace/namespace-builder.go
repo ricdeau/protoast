@@ -1,20 +1,20 @@
 package namespace
 
 import (
-	"github.com/sirkon/protoast/ast"
+	"github.com/ricdeau/protoast/ast"
 )
 
 func NewBuilderNaming(naming func(string, string) string) *Builder {
 	return &Builder{
-		mapping:	map[string]Namespace{},
-		scopeNaming:	naming,
+		mapping:     map[string]Namespace{},
+		scopeNaming: naming,
 	}
 }
 
 type Builder struct {
-	mapping		map[string]Namespace
-	scopeNaming	func(first, last string) string
-	files		map[string]*ast.File
+	mapping     map[string]Namespace
+	scopeNaming func(first, last string) string
+	files       map[string]*ast.File
 }
 
 func (nb *Builder) get(fileName string, ns Namespace) Namespace {

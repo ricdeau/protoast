@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/errors"
 )
 
 // Files абстракция для работы с файлами

@@ -3,6 +3,7 @@ package ast
 import "strconv"
 
 var _ Unique = &Option{}
+var _ Named = &Option{}
 
 // Option опция
 type Option struct {
@@ -11,6 +12,10 @@ type Option struct {
 	Name      string
 	Value     OptionValue
 	Extension *Extension
+}
+
+func (o *Option) GetName() string {
+	return o.Name
 }
 
 // OptionValue значение опции

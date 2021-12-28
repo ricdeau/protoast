@@ -3,6 +3,7 @@ package ast
 import "strings"
 
 var _ Type = &Enum{}
+var _ Named = &Enum{}
 
 // Enum представление типа enum
 type Enum struct {
@@ -14,6 +15,10 @@ type Enum struct {
 	Name    string
 	Options []*Option
 	Values  []*EnumValue
+}
+
+func (e *Enum) GetName() string {
+	return e.Name
 }
 
 func (*Enum) genericType() {}
@@ -35,6 +40,7 @@ func (e *Enum) String() string {
 }
 
 var _ Unique = &EnumValue{}
+var _ Named = &EnumValue{}
 
 // EnumValue представление поля для Enum-а
 type EnumValue struct {
@@ -43,4 +49,8 @@ type EnumValue struct {
 	Name    string
 	Integer int
 	Options []*Option
+}
+
+func (e *EnumValue) GetName() string {
+	return e.Name
 }

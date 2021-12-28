@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/emicklei/proto"
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/errors"
 )
 
 type protos struct {

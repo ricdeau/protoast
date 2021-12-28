@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/errors"
 )
 
 // FileManager работа с записываемыми файлами

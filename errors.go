@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"text/scanner"
 
-	"github.com/sirkon/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/errors"
 )
 
 var _ error = errorPosition{}
