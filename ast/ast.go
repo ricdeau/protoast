@@ -25,12 +25,27 @@ type Hashable interface {
 	hashable()
 }
 
-// Named типы имеющие имя
+// Named типы имеющие имя.
 type Named interface {
 	GetName() string
 }
 
-type Compaund interface {
+// Valuable типы имеющие значение.
+type Valuable interface {
+	GetValue() interface{}
+}
+
+// Compound типы, входящие в состав других типов.
+type Compound interface {
 	Named
 	GetParentMsg() *Message
+}
+
+// OptionsBearer типы, которые могут содержать proto-опции.
+type OptionsBearer interface {
+	GetOptions() []*Option
+}
+
+type Commented interface {
+	GetComment() *Comment
 }

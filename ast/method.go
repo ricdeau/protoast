@@ -1,7 +1,9 @@
 package ast
 
-var _ Node = &Method{}
-var _ Named = &Method{}
+var _ Node = (*Method)(nil)
+var _ Named = (*Method)(nil)
+var _ Commented = (*Method)(nil)
+var _ OptionsBearer = (*Method)(nil)
 
 // Method представление для метода
 type Method struct {
@@ -10,15 +12,24 @@ type Method struct {
 	File    *File
 	Service *Service
 
-	Name   string
-	Input  Type
-	Output Type
+	Name    string
+	Comment *Comment
+	Input   Type
+	Output  Type
 
 	Options []*Option
 }
 
+func (m *Method) GetOptions() []*Option {
+	return m.Options
+}
+
 func (m *Method) GetName() string {
 	return m.Name
+}
+
+func (m *Method) GetComment() *Comment {
+	return m.Comment
 }
 
 func (m *Method) node() {}

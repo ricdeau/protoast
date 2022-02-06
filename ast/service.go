@@ -1,7 +1,9 @@
 package ast
 
-var _ Node = &Service{}
-var _ Named = &Service{}
+var _ Node = (*Service)(nil)
+var _ Named = (*Service)(nil)
+var _ Commented = (*Service)(nil)
+var _ OptionsBearer = (*Service)(nil)
 
 // Service представление для сервисов
 type Service struct {
@@ -10,8 +12,17 @@ type Service struct {
 	File *File
 
 	Name    string
+	Comment *Comment
 	Methods []*Method
 	Options []*Option
+}
+
+func (s *Service) GetComment() *Comment {
+	return s.Comment
+}
+
+func (s *Service) GetOptions() []*Option {
+	return s.Options
 }
 
 // Method поиск метода по имени

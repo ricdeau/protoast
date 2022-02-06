@@ -8,6 +8,7 @@ import (
 
 	"github.com/emicklei/proto"
 	"github.com/ricdeau/protoast/internal/errors"
+	"github.com/ricdeau/protoast/internal/helpers"
 	"github.com/ricdeau/protoast/internal/namespace"
 
 	"github.com/ricdeau/protoast/ast"
@@ -47,10 +48,7 @@ func (tv *typesVisitor) regInfo(k ast.Unique, comment *proto.Comment, pos scanne
 	key := ast.GetUnique(k)
 
 	if comment != nil {
-		cmt := &ast.Comment{
-			Value: comment.Message(),
-			Lines: comment.Lines,
-		}
+		cmt := helpers.FromProtoComment(comment)
 		tv.regInfo(cmt, nil, comment.Position)
 		tv.nss.comments[key] = cmt
 	}
@@ -63,9 +61,7 @@ func (tv *typesVisitor) regFieldInfo(k ast.Unique, fieldAddr interface{}, commen
 	key := ast.GetFieldKey(k, fieldAddr)
 
 	if comment != nil {
-		cmt := &ast.Comment{
-			Value: comment.Message(),
-		}
+		cmt := helpers.FromProtoComment(comment)
 		tv.regInfo(cmt, nil, comment.Position)
 		tv.nss.comments[key] = cmt
 	}
@@ -77,6 +73,7 @@ func (tv *typesVisitor) VisitMessage(m *proto.Message) {
 	msg := &ast.Message{
 		File:      tv.file,
 		Name:      m.Name,
+		Comment:   helpers.FromProtoComment(m.Comment),
 		ParentMsg: tv.msgCtx.item,
 	}
 	prev := tv.msgCtx
@@ -97,6 +94,7 @@ func (tv *typesVisitor) VisitMessage(m *proto.Message) {
 	}
 	realMsg.Fields = append(realMsg.Fields, msg.Fields...)
 	realMsg.Options = msg.Options
+	realMsg.Comment = msg.Comment
 	*msg = *realMsg
 
 	if realMsg.ParentMsg == nil && !m.IsExtend {
@@ -124,8 +122,9 @@ func (tv *typesVisitor) processDirectMessage(m *proto.Message, msg *ast.Message)
 
 func (tv *typesVisitor) VisitService(v *proto.Service) {
 	tv.service = &ast.Service{
-		File: tv.file,
-		Name: v.Name,
+		File:    tv.file,
+		Name:    v.Name,
+		Comment: helpers.FromProtoComment(v.Comment),
 	}
 
 	tv.serviceCtx = tv.service
@@ -370,7 +369,16 @@ func (tv *typesVisitor) literalToOptionValueWithMsg(name string, l *proto.Litera
 		shortName := shortName(name)
 		// здесь вычисляем реальный тип основываясь на записи в соответствующем расширении
 		for _, f := range msg.Fields {
-			if f.Name == shortName {
+			if oo, ok := f.Type.(*ast.OneOf); ok {
+				for _, branch := range oo.Branches {
+					if branch.Name == shortName {
+						value := tv.fromType(f.Type, name, l)
+						if value != nil {
+							return value
+						}
+					}
+				}
+			} else if f.Name == shortName {
 				value := tv.fromType(f.Type, name, l)
 				if value != nil {
 					return value
@@ -494,6 +502,13 @@ func (tv *typesVisitor) fromType(fieldType ast.Type, name string, l *proto.Liter
 	case *ast.Message:
 		msg := tv.literalToOptionValueWithMsg(name, l, v)
 		return msg
+	case *ast.OneOf:
+		for _, branch := range v.Branches {
+			if branch.Name == name {
+				return tv.fromType(branch.Type, name, l)
+			}
+		}
+
 	default:
 		tv.errors(errPosf(l.Position, "type %T is not supported for option values", fieldType))
 	}
@@ -619,6 +634,7 @@ func (tv *typesVisitor) VisitNormalField(i *proto.NormalField) {
 	}
 	field := &ast.MessageField{
 		Name:     i.Name,
+		Comment:  helpers.FromProtoComment(i.Comment),
 		Sequence: i.Sequence,
 		Type:     t,
 		Options:  options,
@@ -693,6 +709,7 @@ func (tv *typesVisitor) VisitEnumField(i *proto.EnumField) {
 	}
 	value := &ast.EnumValue{
 		Name:    i.Name,
+		Comment: helpers.FromProtoComment(i.Comment),
 		Integer: i.Integer,
 		Options: options,
 	}
@@ -704,6 +721,7 @@ func (tv *typesVisitor) VisitEnumField(i *proto.EnumField) {
 
 func (tv *typesVisitor) VisitEnum(e *proto.Enum) {
 	enum := tv.ns.GetType(e.Name).(*ast.Enum)
+	enum.Comment = helpers.FromProtoComment(e.Comment)
 	if enum == nil {
 		panic("internal error: enum must be predeclared on the prefetch phase")
 	}
@@ -743,6 +761,7 @@ func (tv *typesVisitor) VisitOneof(o *proto.Oneof) {
 
 	oob := &ast.MessageField{
 		Name:     o.Name,
+		Comment:  helpers.FromProtoComment(o.Comment),
 		Sequence: -1,
 		Type:     tv.oneOf,
 	}
@@ -798,6 +817,7 @@ func (tv *typesVisitor) VisitOneofField(o *proto.OneOfField) {
 	tv.regInfo(t, nil, o.Position)
 	b := &ast.OneOfBranch{
 		Name:     o.Name,
+		Comment:  helpers.FromProtoComment(o.Comment),
 		Type:     t,
 		ParentOO: tv.oneOf,
 		Sequence: o.Sequence,
@@ -818,6 +838,7 @@ func (tv *typesVisitor) VisitRPC(r *proto.RPC) {
 		File:    tv.file,
 		Service: tv.service,
 		Name:    r.Name,
+		Comment: helpers.FromProtoComment(r.Comment),
 	}
 
 	req := tv.ns.GetType(r.RequestType)

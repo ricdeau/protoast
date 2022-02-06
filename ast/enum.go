@@ -2,8 +2,9 @@ package ast
 
 import "strings"
 
-var _ Type = &Enum{}
-var _ Named = &Enum{}
+var _ Type = (*Enum)(nil)
+var _ Named = (*Enum)(nil)
+var _ Commented = (*Enum)(nil)
 
 // Enum представление типа enum
 type Enum struct {
@@ -13,12 +14,17 @@ type Enum struct {
 	ParentMsg *Message
 
 	Name    string
+	Comment *Comment
 	Options []*Option
 	Values  []*EnumValue
 }
 
 func (e *Enum) GetName() string {
 	return e.Name
+}
+
+func (e *Enum) GetComment() *Comment {
+	return e.Comment
 }
 
 func (*Enum) genericType() {}
@@ -39,18 +45,24 @@ func (e *Enum) String() string {
 	return buf.String()
 }
 
-var _ Unique = &EnumValue{}
-var _ Named = &EnumValue{}
+var _ Unique = (*EnumValue)(nil)
+var _ Named = (*EnumValue)(nil)
+var _ Commented = (*EnumValue)(nil)
 
 // EnumValue представление поля для Enum-а
 type EnumValue struct {
 	unique
 
 	Name    string
+	Comment *Comment
 	Integer int
 	Options []*Option
 }
 
 func (e *EnumValue) GetName() string {
 	return e.Name
+}
+
+func (e *EnumValue) GetComment() *Comment {
+	return e.Comment
 }

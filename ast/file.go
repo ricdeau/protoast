@@ -7,7 +7,8 @@ import (
 	"github.com/ricdeau/protoast/internal/errors"
 )
 
-var _ Node = &File{}
+var _ Node = (*File)(nil)
+var _ OptionsBearer = (*File)(nil)
 
 // File представление для файла
 type File struct {
@@ -25,6 +26,10 @@ type File struct {
 
 	GoPath string
 	GoPkg  string
+}
+
+func (f *File) GetOptions() []*Option {
+	return f.Options
 }
 
 // Type поиск типа по имени.

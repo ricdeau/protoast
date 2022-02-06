@@ -2,8 +2,10 @@ package ast
 
 import "strings"
 
-var _ Type = &Message{}
-var _ Compaund = &Message{}
+var _ Type = (*Message)(nil)
+var _ Compound = (*Message)(nil)
+var _ Commented = (*Message)(nil)
+var _ OptionsBearer = (*Message)(nil)
 
 // Message представление message
 type Message struct {
@@ -13,13 +15,22 @@ type Message struct {
 	ParentMsg *Message
 
 	Name    string
+	Comment *Comment
 	Fields  []*MessageField
 	Types   []Type
 	Options []*Option
 }
 
+func (m *Message) GetOptions() []*Option {
+	return m.Options
+}
+
 func (m *Message) GetName() string {
 	return m.Name
+}
+
+func (m *Message) GetComment() *Comment {
+	return m.Comment
 }
 
 func (m *Message) GetParentMsg() *Message {
@@ -158,17 +169,31 @@ func (m *Message) ScanTypes(inspector func(typ Type) bool) {
 	return
 }
 
-var _ Unique = &MessageField{}
-var _ Field = &MessageField{}
+var _ Unique = (*MessageField)(nil)
+var _ Field = (*MessageField)(nil)
+var _ Commented = (*MessageField)(nil)
 
 // MessageField представление поля message-а
 type MessageField struct {
 	unique
 
 	Name     string
+	Comment  *Comment
 	Sequence int
 	Type     Type
 	Options  []*Option
+}
+
+func (m *MessageField) GetComment() *Comment {
+	return m.Comment
+}
+
+func (m *MessageField) GetOptions() []*Option {
+	return FieldOptions(m)
+}
+
+func (m *MessageField) GetName() string {
+	return m.Name
 }
 
 func (m *MessageField) isField() (string, Type, []*Option, int) {
