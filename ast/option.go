@@ -131,10 +131,17 @@ func (o *StringOption) String() string {
 	return o.Value
 }
 
+var _ OptionValue = (*BoolOption)(nil)
+var _ Valuable = (*BoolOption)(nil)
+
 // BoolOption branch of OptionValue
 type BoolOption struct {
 	unique
 	Value bool
+}
+
+func (o *BoolOption) GetValue() interface{} {
+	return o.Value
 }
 
 func (o *BoolOption) String() string {
