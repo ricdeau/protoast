@@ -29,6 +29,10 @@ func (m *Message) GetName() string {
 	return m.Name
 }
 
+func (m *Message) GetFullName() string {
+	return m.String()
+}
+
 func (m *Message) GetComment() *Comment {
 	return m.Comment
 }
@@ -193,6 +197,10 @@ func (m *MessageField) GetOptions() []*Option {
 }
 
 func (m *MessageField) GetName() string {
+	return m.Name
+}
+
+func (m *MessageField) GetFullName() string {
 	return m.Name
 }
 

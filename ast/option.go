@@ -18,6 +18,10 @@ func (o *Option) GetName() string {
 	return o.Name
 }
 
+func (o *Option) GetFullName() string {
+	return o.Name
+}
+
 // OptionValue значение опции
 type OptionValue interface {
 	Unique

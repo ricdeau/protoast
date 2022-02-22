@@ -28,6 +28,10 @@ func (m *Method) GetName() string {
 	return m.Name
 }
 
+func (m *Method) GetFullName() string {
+	return m.File.Package + "." + m.Service.Name + "/" + m.Name
+}
+
 func (m *Method) GetComment() *Comment {
 	return m.Comment
 }

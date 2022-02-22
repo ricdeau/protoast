@@ -1,10 +1,19 @@
 package ast
 
-var _ Hashable = &Int32{}
+var _ Hashable = (*Int32)(nil)
+var _ Named = (*Int32)(nil)
 
 // Int32 представление типа int32
 type Int32 struct {
 	unique
+}
+
+func (*Int32) GetName() string {
+	return "int32"
+}
+
+func (*Int32) GetFullName() string {
+	return "int32"
 }
 
 func (*Int32) equivalent(v ScalarNode) bool {

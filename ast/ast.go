@@ -28,6 +28,7 @@ type Hashable interface {
 // Named типы имеющие имя.
 type Named interface {
 	GetName() string
+	GetFullName() string
 }
 
 // Valuable типы имеющие значение.

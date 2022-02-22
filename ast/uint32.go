@@ -1,10 +1,19 @@
 package ast
 
-var _ Hashable = &Uint32{}
+var _ Hashable = (*Uint32)(nil)
+var _ Named = (*Uint32)(nil)
 
 // Uint32 представление для типа uint32
 type Uint32 struct {
 	unique
+}
+
+func (*Uint32) GetName() string {
+	return "uint32"
+}
+
+func (*Uint32) GetFullName() string {
+	return "uint32"
 }
 
 func (*Uint32) equivalent(v ScalarNode) bool {

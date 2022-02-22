@@ -40,4 +40,8 @@ func (s *Service) GetName() string {
 	return s.Name
 }
 
+func (s *Service) GetFullName() string {
+	return s.File.Package + "." + s.Name
+}
+
 func (s *Service) node() {}

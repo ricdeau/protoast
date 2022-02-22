@@ -1,10 +1,19 @@
 package ast
 
-var _ Hashable = &Sint32{}
+var _ Hashable = (*Sint32)(nil)
+var _ Named = (*Sint32)(nil)
 
 // Sint32 представление для типа sint32
 type Sint32 struct {
 	unique
+}
+
+func (*Sint32) GetName() string {
+	return "sint32"
+}
+
+func (*Sint32) GetFullName() string {
+	return "sint32"
 }
 
 func (*Sint32) equivalent(v ScalarNode) bool {

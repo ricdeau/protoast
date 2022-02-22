@@ -23,6 +23,10 @@ func (e *Enum) GetName() string {
 	return e.Name
 }
 
+func (e *Enum) GetFullName() string {
+	return e.String()
+}
+
 func (e *Enum) GetComment() *Comment {
 	return e.Comment
 }
@@ -60,6 +64,10 @@ type EnumValue struct {
 }
 
 func (e *EnumValue) GetName() string {
+	return e.Name
+}
+
+func (e *EnumValue) GetFullName() string {
 	return e.Name
 }
 

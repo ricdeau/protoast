@@ -1,10 +1,19 @@
 package ast
 
-var _ Hashable = &Fixed32{}
+var _ Hashable = (*Fixed32)(nil)
+var _ Named = (*Fixed32)(nil)
 
 // Fixed32 представление типа fixed32
 type Fixed32 struct {
 	unique
+}
+
+func (*Fixed32) GetName() string {
+	return "fixed32"
+}
+
+func (*Fixed32) GetFullName() string {
+	return "fixed32"
 }
 
 func (*Fixed32) equivalent(v ScalarNode) bool {

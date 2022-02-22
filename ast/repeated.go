@@ -1,6 +1,6 @@
 package ast
 
-var _ Type = &Repeated{}
+var _ Type = (*Repeated)(nil)
 
 // Repeated представление для полей с repeeated
 type Repeated struct {

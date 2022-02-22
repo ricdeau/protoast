@@ -1,7 +1,11 @@
 package ast
 
-var _ Type = &OneOf{}
-var _ Compound = &OneOf{}
+import (
+	"strings"
+)
+
+var _ Type = (*OneOf)(nil)
+var _ Compound = (*OneOf)(nil)
 
 // OneOf представление для oneof поля message-а
 type OneOf struct {
@@ -17,8 +21,23 @@ func (o *OneOf) GetName() string {
 	return o.Name
 }
 
+func (o *OneOf) GetFullName() string {
+	return o.String()
+}
+
 func (o *OneOf) GetParentMsg() *Message {
 	return o.ParentMsg
+}
+
+// String референс-имя сообщения, включает в себя название пакета,
+// имена родительских сообщений, в пространстве имён которых оно определено.
+func (m *OneOf) String() string {
+	var buf strings.Builder
+	buf.WriteString(m.ParentMsg.String())
+	buf.WriteByte('.')
+	buf.WriteString(m.Name)
+
+	return buf.String()
 }
 
 func (*OneOf) genericType() {}
@@ -45,6 +64,10 @@ func (o *OneOfBranch) GetOptions() []*Option {
 }
 
 func (o *OneOfBranch) GetName() string {
+	return o.Name
+}
+
+func (o *OneOfBranch) GetFullName() string {
 	return o.Name
 }
 
