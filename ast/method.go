@@ -5,6 +5,18 @@ var _ Named = (*Method)(nil)
 var _ Commented = (*Method)(nil)
 var _ OptionsBearer = (*Method)(nil)
 
+// MethodType тип метода: унарный, входящий/исходящий/двунаправленный потоковый.
+type MethodType byte
+
+// Типы методов.
+const (
+	_ MethodType = iota
+	Unary
+	InputStream
+	OutputStream
+	BidirectionalStream
+)
+
 // Method представление для метода
 type Method struct {
 	unique
@@ -46,6 +58,22 @@ func (m *Method) InputMessage() *Message {
 // OutputMessage аналогично InputMessage, возвращает структуру ответа, при необходимости снимая stream
 func (m *Method) OutputMessage() *Message {
 	return getMessage(m.Output)
+}
+
+// GetMethodType возвращает тип метода.
+func (m *Method) GetMethodType() MethodType {
+	_, in := m.Input.(*Stream)
+	_, out := m.Output.(*Stream)
+	switch {
+	case in && out:
+		return BidirectionalStream
+	case in:
+		return InputStream
+	case out:
+		return OutputStream
+	default:
+		return Unary
+	}
 }
 
 func getMessage(m Type) *Message {
